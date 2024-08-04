@@ -1,0 +1,16 @@
+{
+    "projects": {
+        "default": "spotter-ai-challenge"
+    },
+    "targets": {
+        "spotter-ai-challenge": {
+            "hosting": {
+                "spotter-ai-challenge": [
+                    "spotter-ai-challenge"
+                ]
+            }
+        }
+    },
+    "etags": {},
+    "dataconnectEmulatorConfig": {}
+}
