@@ -20,6 +20,7 @@
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
+        "baseUrl": "./src",
         "paths": {
             "@constants/*": [
                 "constants/*"
@@ -33,23 +34,38 @@
             "@models/*": [
                 "models/*"
             ],
+            "@models": [
+                "models/index.ts"
+            ],
             "@components/*": [
                 "components/*"
             ],
             "@hooks/*": [
                 "hooks/*"
             ],
+            "@hooks": [
+                "hooks/index.ts"
+            ],
             "@providers/*": [
                 "providers/*"
+            ],
+            "@providers": [
+                "providers/index.ts"
             ],
             "@types/*": [
                 "types/*"
             ],
-            "@functions/*": [
-                "functions/*"
+            "@types": [
+                "types/index.ts"
             ],
-            "@styles/*": [
-                "styles/*"
+            "@utils/*": [
+                "utils/*"
+            ],
+            "@utils": [
+                "utils/index.ts"
+            ],
+            "@assets/*": [
+                "assets/*"
             ],
             "App/*": [
                 "App/*"
