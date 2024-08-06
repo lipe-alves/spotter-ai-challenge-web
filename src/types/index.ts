@@ -1,3 +1,4 @@
+import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import { THEME_SIZES } from "@assets/styles/constants";
 
 export interface ContextProviderProps {
@@ -19,3 +20,5 @@ export type Operator =
     | "in"
     | "not-in"
     | "array-contains-any";
+
+export type DataGridColumn = GridColDef<GridValidRowModel> & GridColDef<any>;

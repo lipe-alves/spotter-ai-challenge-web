@@ -10,7 +10,7 @@ import {
 import { ContextProviderProps } from "@types";
 import { useAsyncEffect } from "@hooks";
 import { csv } from "@utils";
-import { Record, RecordStatus, EntityType } from "@models";
+import { Record, RecordStatus, EntityType, OperatingStatus } from "@models";
 
 import fmscaRecordsUrl from "@assets/data/FMSCA_records.csv";
 
@@ -26,6 +26,8 @@ interface DatasetValue {
     setFilters: Dispatch<SetStateAction<RecordFilters>>;
     recordStatuses: RecordStatus[];
     entityTypes: EntityType[];
+    operatingStatuses: OperatingStatus[];
+    states: string[];
 }
 
 const DatasetContext = createContext<DatasetValue | undefined>(undefined);
@@ -73,6 +75,23 @@ function DatasetProvider(props: ContextProviderProps) {
         }, [] as EntityType[]);
     }, [allRecords]);
 
+    const operatingStatuses = useMemo(() => {
+        return allRecords.reduce((statuses, record) => {
+            statuses = Array.from(
+                new Set([...statuses, record.operatingStatus || "UNSPECIFIED"])
+            );
+            statuses = statuses.filter(Boolean);
+            return statuses;
+        }, [] as OperatingStatus[]);
+    }, [allRecords]);
+
+    const states = useMemo(() => {
+        return allRecords.reduce((states, record) => {
+            states = Array.from(new Set([...states, record.pState]));
+            return states;
+        }, [] as string[]);
+    }, [allRecords]);
+
     const filteredRecords = useMemo(() => {
         const recordStatus = filters.recordStatus;
         const search = filters.search || "";
@@ -115,6 +134,8 @@ function DatasetProvider(props: ContextProviderProps) {
                 setFilters,
                 recordStatuses,
                 entityTypes,
+                operatingStatuses,
+                states,
             }}
         >
             {children}

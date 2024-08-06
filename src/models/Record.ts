@@ -2,7 +2,11 @@ import { toDate, toNumber } from "@utils";
 
 type CreditScore = "A" | "B" | "C" | "D" | "I";
 type RecordStatus = "active" | "inactive" | "unknown";
-type OperatingStatus = "ACTIVE" | "NOT AUTHORIZED" | "OUT-OF-SERVICE";
+type OperatingStatus =
+    | "ACTIVE"
+    | "NOT AUTHORIZED"
+    | "OUT-OF-SERVICE"
+    | "UNSPECIFIED";
 type EntityType =
     | "CARRIER"
     | "BROKER"

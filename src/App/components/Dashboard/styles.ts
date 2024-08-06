@@ -12,6 +12,7 @@ const DashboardRoot = styled("div")(({ theme }) => ({
     height: "100%",
     padding: theme.spacing("lg"),
     paddingTop: APP_BAR_HEIGHT + toNumber(theme.spacing("lg")),
+    overflow: "auto",
 }));
 
 export { DashboardRoot };

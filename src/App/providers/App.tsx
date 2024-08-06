@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { ContextProviderProps } from "@types";
 
 interface AppValue {

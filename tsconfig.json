@@ -40,6 +40,9 @@
             "@components/*": [
                 "components/*"
             ],
+            "@components": [
+                "components/index.ts"
+            ],
             "@hooks/*": [
                 "hooks/*"
             ],

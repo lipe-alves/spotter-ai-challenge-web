@@ -1,6 +1,6 @@
-import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import { useDataset } from "@providers";
 import { useWindowSize } from "@hooks";
+import { DataGridColumn } from "@types";
 import {
     DateCell,
     IdCell,
@@ -8,11 +8,9 @@ import {
     TextCell,
     EntityCell,
 } from "./cells";
-import { TableContainer } from "./styles";
+import { DataGridContainer } from "./styles";
 
-type DataGridColumn = GridColDef<GridValidRowModel> & GridColDef<any>;
-
-function DataTable() {
+function RecordDataGrid() {
     const { loading, filteredRecords, filters } = useDataset();
     const [windowWidth] = useWindowSize();
     const isMobile = windowWidth <= 600;
@@ -20,7 +18,7 @@ function DataTable() {
     const rows = filteredRecords
         .map((record) => ({
             ...record,
-            operatingStatus: record.operatingStatus || "UNESPECIFIED",
+            operatingStatus: record.operatingStatus || "UNSPECIFIED",
             legalName: record.legalName || "-",
             dbaName: record.dbaName || "-",
         }))
@@ -158,7 +156,7 @@ function DataTable() {
         },
         columns: {
             columnVisibilityModel: {
-                id: true,
+                id: !isMobile,
                 entityType: true,
                 operatingStatus: true,
                 legalName: true,
@@ -176,7 +174,7 @@ function DataTable() {
     };
 
     return (
-        <TableContainer
+        <DataGridContainer
             key={String(isMobile)}
             rowSelection={false}
             rows={rows}
@@ -188,5 +186,5 @@ function DataTable() {
     );
 }
 
-export default DataTable;
-export { DataTable };
+export default RecordDataGrid;
+export { RecordDataGrid };

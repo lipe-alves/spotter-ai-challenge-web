@@ -1,11 +1,11 @@
-import { ChangeEvent, useState, useEffect, useMemo, MouseEvent } from "react";
-import { MenuItem, TextField } from "@mui/material";
+import { ChangeEvent, useEffect, useMemo } from "react";
+import { TextField } from "@mui/material";
 
 import { useDataset } from "@providers";
-import { csv, downloadFile } from "@utils";
 import { useWindowSize } from "@hooks";
+import { ExportDropdown } from "@components";
 
-import DataTable from "../DataTable";
+import RecordDataGrid from "./RecordDataGrid";
 
 import {
     TableHeader,
@@ -14,34 +14,14 @@ import {
     TableContainer,
     TableTools,
     FormContainer,
-    ExportButton,
-    ExportMenu,
-    ExportButtonList,
 } from "./styles";
-
-import {
-    FileOpenOutlined as ExportIcon,
-    KeyboardArrowDown as ArrowDownIcon,
-} from "@mui/icons-material";
 
 function RecordTable() {
     const { allRecords, filteredRecords, filters, setFilters, recordStatuses } =
         useDataset();
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [copied, setCopied] = useState(false);
     const [windowWidth] = useWindowSize();
-
     const isMobile = windowWidth <= 600;
-    const open = Boolean(anchorEl);
-
-    const handleOpenExportMenu = (event: MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleCloseExportMenu = () => {
-        setAnchorEl(null);
-    };
 
     const selectedRecordStatusIndex = useMemo(() => {
         return recordStatuses.indexOf(filters.recordStatus);
@@ -69,27 +49,6 @@ function RecordTable() {
             ...prev,
             search: evt.target.value,
         }));
-    };
-
-    const handleExportAsExcel = async () => {
-        const buffer = csv.convertToXlsx(filteredRecords, "Report");
-        const blob = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-        downloadFile(blob, "report.xlsx");
-    };
-
-    const handleExportAsCsv = async () => {
-        const csvStr = csv.convertToCsv(filteredRecords);
-        const blob = new Blob([csvStr], { type: "text/csv" });
-        downloadFile(blob, "report.csv");
-    };
-
-    const handleCopyCsv = async () => {
-        const csvStr = csv.convertToCsv(filteredRecords);
-        await navigator.clipboard.writeText(csvStr);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 3000);
     };
 
     useEffect(() => {
@@ -134,49 +93,9 @@ function RecordTable() {
                             value={filters.search}
                         />
                     </FormContainer>
-                    {!isMobile ? (
-                        <>
-                            <ExportButton
-                                onClick={handleOpenExportMenu}
-                                startIcon={<ExportIcon />}
-                                endIcon={<ArrowDownIcon />}
-                            >
-                                Export
-                            </ExportButton>
-                            <ExportMenu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleCloseExportMenu}
-                            >
-                                <MenuItem onClick={handleExportAsCsv}>
-                                    CSV
-                                </MenuItem>
-                                <MenuItem onClick={handleExportAsExcel}>
-                                    Excel
-                                </MenuItem>
-                                <MenuItem onClick={handleCopyCsv}>
-                                    {!copied ? "Copy" : "Copied!"}
-                                </MenuItem>
-                            </ExportMenu>
-                        </>
-                    ) : (
-                        <FormContainer fullWidth={isMobile}>
-                            <span>Export as:</span>
-                            <ExportButtonList>
-                                <ExportButton onClick={handleExportAsCsv}>
-                                    CSV
-                                </ExportButton>
-                                <ExportButton onClick={handleExportAsExcel}>
-                                    Excel
-                                </ExportButton>
-                                <ExportButton onClick={handleCopyCsv}>
-                                    {!copied ? "Copy" : "Copied!"}
-                                </ExportButton>
-                            </ExportButtonList>
-                        </FormContainer>
-                    )}
+                    <ExportDropdown data={filteredRecords} />
                 </TableTools>
-                <DataTable />
+                <RecordDataGrid />
             </TableContainer>
         </>
     );
