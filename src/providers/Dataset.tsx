@@ -10,7 +10,7 @@ import {
 import { ContextProviderProps } from "@types";
 import { useAsyncEffect } from "@hooks";
 import { csv } from "@utils";
-import { Record } from "@models";
+import { Record, RecordStatus, EntityType } from "@models";
 
 import fmscaRecordsUrl from "@assets/data/FMSCA_records.csv";
 
@@ -24,7 +24,8 @@ interface DatasetValue {
     filteredRecords: Record[];
     filters: RecordFilters;
     setFilters: Dispatch<SetStateAction<RecordFilters>>;
-    recordStatuses: string[];
+    recordStatuses: RecordStatus[];
+    entityTypes: EntityType[];
 }
 
 const DatasetContext = createContext<DatasetValue | undefined>(undefined);
@@ -58,10 +59,18 @@ function DatasetProvider(props: ContextProviderProps) {
     const recordStatuses = useMemo(() => {
         return allRecords.reduce((statuses, record) => {
             statuses = Array.from(
-                new Set([...statuses, record.recordStatus || "Unknown"])
+                new Set([...statuses, record.recordStatus || "unknown"])
             );
             return statuses;
-        }, [] as string[]);
+        }, [] as RecordStatus[]);
+    }, [allRecords]);
+
+    const entityTypes = useMemo(() => {
+        return allRecords.reduce((entities, record) => {
+            entities = Array.from(new Set([...entities, ...record.entityType]));
+            entities = entities.filter(Boolean);
+            return entities;
+        }, [] as EntityType[]);
     }, [allRecords]);
 
     const filteredRecords = useMemo(() => {
@@ -70,7 +79,7 @@ function DatasetProvider(props: ContextProviderProps) {
 
         return allRecords
             .filter((record) =>
-                recordStatus === "Unknown"
+                recordStatus === "unknown"
                     ? !record.recordStatus
                     : record.recordStatus === recordStatus
             )
@@ -105,6 +114,7 @@ function DatasetProvider(props: ContextProviderProps) {
                 filters,
                 setFilters,
                 recordStatuses,
+                entityTypes,
             }}
         >
             {children}

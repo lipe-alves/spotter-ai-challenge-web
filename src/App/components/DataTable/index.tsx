@@ -15,9 +15,7 @@ type DataGridColumn = GridColDef<GridValidRowModel> & GridColDef<any>;
 function DataTable() {
     const { loading, filteredRecords, filters } = useDataset();
     const [windowWidth] = useWindowSize();
-
     const isMobile = windowWidth <= 600;
-    console.log("isMobile", isMobile);
 
     const rows = filteredRecords
         .map((record) => ({
@@ -28,7 +26,7 @@ function DataTable() {
         }))
         .filter((record) => {
             if (!filters.recordStatus) return true;
-            if (filters.recordStatus === "Unknown") return !record.recordStatus;
+            if (filters.recordStatus === "unknown") return !record.recordStatus;
             return record.recordStatus === filters.recordStatus;
         });
 

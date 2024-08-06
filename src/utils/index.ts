@@ -4,3 +4,5 @@ export * from "./toDate";
 export * from "./toNumber";
 export * from "./dateIsValid";
 export * from "./downloadFile";
+export * from "./stringToColor";
+export * from "./darkenColor";
