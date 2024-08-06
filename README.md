@@ -10,7 +10,7 @@ This project is a front-end application designed to provide a centralized view o
 - **Pagination**: Efficiently navigate through large datasets.
 - **Column Filters**: Filter data based on specific columns.
 
-## Columns Included
+## Columns to Include
 
 - Created_DT
 - Modified_DT
@@ -28,3 +28,7 @@ This project is a front-end application designed to provide a centralized view o
 ## Dataset
 
 Click [here](https://docs.google.com/spreadsheets/d/1hB_LjBT9ezZigXnC-MblT2PXZledkZqBnvV23ssfSuE/edit?gid=1874221723#gid=1874221723) to access the dataset.
+
+## Website
+
+You can view this project online by this link: https://spotter-ai-challenge.web.app/
