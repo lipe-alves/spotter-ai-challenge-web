@@ -1,4 +1,9 @@
 import { toDate, toNumber } from "@utils";
+import Model from "./Model";
+
+interface RecordFilters {
+    [field: string]: any;
+}
 
 type CreditScore = "A" | "B" | "C" | "D" | "I";
 type RecordStatus = "active" | "inactive" | "unknown";
@@ -15,8 +20,8 @@ type EntityType =
     | "FREIGHT FORWARDER"
     | "SHIPPER";
 
-class Record {
-    public id: string;
+class Record extends Model {
+    public override id: string;
     public createdDt: Date;
     public dataSourceModifiedDt: Date;
     public entityType: EntityType[];
@@ -46,7 +51,7 @@ class Record {
     public creditScore: CreditScore | null;
     public recordStatus: RecordStatus | null;
 
-    private constructor(data: Partial<Record> = {}) {
+    protected constructor(data: Partial<Record> = {}) {
         const {
             id = "",
             createdDt = new Date(),
@@ -79,6 +84,8 @@ class Record {
             recordStatus = null,
         } = data;
 
+        super(data);
+
         this.id = id;
         this.entityType = entityType;
         this.operatingStatus = operatingStatus;
@@ -110,11 +117,21 @@ class Record {
         this.dataSourceModifiedDt = toDate(dataSourceModifiedDt);
     }
 
-    public static create(data?: Partial<Record>): Record {
+    public static override create(data?: Partial<Record>): Record {
         return new Record(data);
+    }
+
+    public static override keys(): (keyof Record)[] {
+        return Object.keys(new Record()) as (keyof Record)[];
     }
 }
 
 export default Record;
 export { Record };
-export type { CreditScore, RecordStatus, OperatingStatus, EntityType };
+export type {
+    CreditScore,
+    RecordStatus,
+    OperatingStatus,
+    EntityType,
+    RecordFilters,
+};

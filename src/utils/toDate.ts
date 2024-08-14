@@ -36,12 +36,7 @@ function toDate(value: any): Date {
     if (value instanceof Date) {
         return value;
     }
-    if (typeof value === "string" && value !== "") {
-        if (value.match(/\d{2}\/\d{2}\/\d+/)) {
-            const [day, month, yearAndTime] = value.split("/");
-            value = `${month}/${day}/${yearAndTime}`;
-        }
-
+    if (typeof value === "string" && !!value) {
         return new Date(value);
     }
     return value;

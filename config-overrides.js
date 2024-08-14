@@ -11,6 +11,7 @@ module.exports = function override(config) {
     }
 
     config.resolve.alias = {
+        "@api": path.resolve(__dirname, "./src/api"),
         "@constants": path.resolve(__dirname, "./src/constants"),
         "@dictionaries": path.resolve(__dirname, "./src/dictionaries"),
         "@services": path.resolve(__dirname, "./src/services"),

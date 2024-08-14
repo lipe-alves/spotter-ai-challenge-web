@@ -1,0 +1,1 @@
+export const LOCAL_STORAGE_AUTH_ID_KEY = "AUTH_ID";

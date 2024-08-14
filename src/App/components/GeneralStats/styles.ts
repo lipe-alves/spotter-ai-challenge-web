@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { darkenColor } from "@utils";
+import { darkenColor, lightenColor } from "@utils";
 import { THEME_SIZES } from "@assets/styles/constants";
 
 const StatsContainer = styled("div")(({ theme }) => ({
@@ -21,40 +21,87 @@ const StatsContainer = styled("div")(({ theme }) => ({
 
 interface StatsCardProps {
     color: string;
+    selected?: boolean;
 }
 
-const StatsCard = styled("div")<StatsCardProps>(({ theme, color }) => ({
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-    gap: THEME_SIZES.xs,
-    flex: 1,
-    textAlign: "center",
-    borderRadius: 8,
-    backgroundImage: `linear-gradient(to bottom right, ${color}, ${darkenColor(
-        color,
-        10
-    )})`,
-    color: theme.palette.secondary.light,
-    fontWeight: 600,
-    height: 150,
-    padding: theme.spacing("md"),
-    boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-    cursor: "pointer",
-    transition: theme.transitions.create("opacity", {
-        duration: 500,
-        easing: theme.transitions.easing.easeIn,
-    }),
+const StatsCard = styled("div")<StatsCardProps>(
+    ({ theme, color, selected }) => {
+        const darkShade = darkenColor(color, 10);
+        const lightShade = lightenColor(color, 10);
 
-    [theme.breakpoints.down("md")]: {
-        width: "100%",
-    },
+        return {
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            gap: THEME_SIZES.xs,
+            flex: 1,
+            textAlign: "center",
+            borderRadius: 8,
+            backgroundImage: `linear-gradient(to bottom right, ${color}, ${darkShade})`,
+            color: theme.palette.secondary.light,
+            fontWeight: 600,
+            height: 200,
+            padding: theme.spacing("md"),
+            boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+            cursor: "pointer",
+            transition: theme.transitions.create(["opacity", "transform"], {
+                duration: 500,
+                easing: theme.transitions.easing.easeIn,
+            }),
+            overflow: "hidden",
 
-    "&:hover": {
-        opacity: 0.8,
-    },
-}));
+            [theme.breakpoints.down("md")]: {
+                width: "100%",
+            },
+
+            "&:hover": {
+                opacity: 0.8,
+                transform: "scale(0.95)",
+            },
+
+            ...(selected && {
+                opacity: 0.8,
+                transform: "scale(0.95)",
+            }),
+
+            "&:before, &:after": {
+                content: '""',
+                position: "absolute",
+                width: 210,
+                height: 210,
+                backgroundColor: darkShade,
+                borderRadius: "50%",
+                opacity: 0.5,
+                zIndex: 1,
+                top: -130,
+                right: -10,
+            },
+
+            "&:after": {
+                backgroundColor: lightShade,
+                top: -85,
+                right: -95,
+                zIndex: 1,
+            },
+
+            "& h1, h2": {
+                margin: 0,
+                zIndex: 3,
+            },
+
+            "& h1": {
+                fontSize: THEME_SIZES.xl,
+            },
+
+            "& h2": {
+                fontSize: THEME_SIZES.md,
+                opacity: 0.5,
+            },
+        };
+    }
+);
 
 export { StatsContainer, StatsCard };
 export type { StatsCardProps };

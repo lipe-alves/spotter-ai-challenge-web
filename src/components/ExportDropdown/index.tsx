@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useMemo } from "react";
 import { MenuItem } from "@mui/material";
 
 import { csv, downloadFile } from "@utils";
@@ -18,10 +18,11 @@ import {
 
 interface ExportDropdownProps {
     data: any[];
+    selectedFields?: string[];
 }
 
 function ExportDropdown(props: ExportDropdownProps) {
-    const { data = [] } = props;
+    let { data = [], selectedFields } = props;
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [copied, setCopied] = useState(false);
@@ -29,6 +30,22 @@ function ExportDropdown(props: ExportDropdownProps) {
 
     const isMobile = windowWidth <= 600;
     const open = Boolean(anchorEl);
+
+    const dataToExport = useMemo(() => {
+        return data.map((item) => {
+            const itemToExport: any = {};
+
+            if (!selectedFields) {
+                selectedFields = Object.keys(item);
+            }
+
+            for (const key of selectedFields) {
+                itemToExport[key] = item[key];
+            }
+
+            return itemToExport;
+        });
+    }, [data, selectedFields]);
 
     const handleOpenExportMenu = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -39,7 +56,7 @@ function ExportDropdown(props: ExportDropdownProps) {
     };
 
     const handleExportAsExcel = async () => {
-        const buffer = csv.convertToXlsx(data, "Report");
+        const buffer = csv.convertToXlsx(dataToExport, "Report");
         const blob = new Blob([buffer], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
@@ -47,13 +64,13 @@ function ExportDropdown(props: ExportDropdownProps) {
     };
 
     const handleExportAsCsv = async () => {
-        const csvStr = csv.convertToCsv(data);
+        const csvStr = csv.convertToCsv(dataToExport);
         const blob = new Blob([csvStr], { type: "text/csv" });
         downloadFile(blob, "report.csv");
     };
 
     const handleCopyCsv = async () => {
-        const csvStr = csv.convertToCsv(data);
+        const csvStr = csv.convertToCsv(dataToExport);
         await navigator.clipboard.writeText(csvStr);
         setCopied(true);
         setTimeout(() => setCopied(false), 3000);
